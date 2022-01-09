@@ -2,10 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
+//other files don't need {name}.js just put {name}
 const keys = require("./config/keys");
-//return nth so don't need a variable
+//return nth so don't need a variable since these have no exports
+//need to require these files to get their components
+//if not it was treated as non-existant
+//kinda like loading other things needed
 require("./models/User");
 require("./services/passport");
+//connect to Mongo DB
 
 mongoose.connect(keys.mongoURI, {
   useNewUrlParser: true,
@@ -27,6 +32,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 //require files returns a functions immediate calls the function required
 //app pass into arrow function
+//below works due to require("./routes/authRoutes")
+//returns a function
+//said function required a parameter which is app
+//sth like function(app)
 require("./routes/authRoutes")(app);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
