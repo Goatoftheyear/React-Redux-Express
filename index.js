@@ -9,6 +9,8 @@ const keys = require("./config/keys");
 //if not it was treated as non-existant
 //kinda like loading other things needed
 require("./models/User");
+//is below here cos it uses User which is sth above
+//if used below it will cause error
 require("./services/passport");
 //connect to Mongo DB
 

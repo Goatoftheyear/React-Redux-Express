@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 // get from keys.js file at config
 const keys = require("../config/keys");
 
+//prevent testing dup
+//preq is mongoose
 const User = mongoose.model("users");
 //stuff into cookie
 passport.serializeUser((user, done) => {
@@ -30,13 +32,14 @@ passport.use(
       proxy: true,
     },
     //access token will expire after a certain time so need refresh token
+
     async (accessToken, refreshToken, profile, done) => {
       const existingUser = await User.findOne({ googleId: profile.id });
       if (existingUser) {
         //we already have a record with given profile ID
         done(null, existingUser);
       }
-      //don't have user record with this ID, make a new record
+      //don't have user record with this ID, make a new record via .save()
       const user = await new User({ googleId: profile.id }).save();
       done(null, user);
     }
