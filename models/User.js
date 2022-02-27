@@ -13,6 +13,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   //googleId will be as String
   googleId: String,
+  credits: { type: Number, default: 0 },
 });
 
 //tell mongoose to make new collection
