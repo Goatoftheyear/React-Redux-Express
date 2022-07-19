@@ -10,6 +10,7 @@ const keys = require("./config/keys");
 //kinda like loading other things needed
 const bodyParser = require("body-parser");
 require("./models/User");
+require("./models/Survey");
 //is below here cos it uses User which is sth above
 //if used below it will cause error
 require("./services/passport");
@@ -43,6 +44,7 @@ app.use(passport.session());
 //sth like function(app)
 require("./routes/authRoutes")(app);
 require("./routes/billingRoutes")(app);
+require("./routes/surveyRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   //Express will serve up production assets
