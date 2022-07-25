@@ -7,45 +7,23 @@ const keys = require("../config/keys");
 //Mailer inherited from Mail object
 //react create custom component and extends component base class
 //from library
-class Mailer extends helper.Mail {
+class Mailer {
   constructor({ subject, recipients }, content) {
-    super();
-
-    this.from_email = new helper.Email("no-reply@emaily.com");
-    this.subject = subject;
-    //text/html means it gonna be html content
-    this.body = new helper.Content("text/html", content);
-    this.recipients = this.formatAddresses(recipients);
-
-    //need to register the content to the email
-    this.addContent(this.body);
-    this.addClickTracking();
-    this.addRecipients();
-  }
-  //takes in lists of email and format it
-  //with help of helper.Email (helper is from sendGrid)
-  formatAddresses(recipients) {
-    return recipients.map(({ email }) => {
-      return new helper.Email(email);
-    });
-  }
-  addClickTracking() {
-    const trackingSettings = new helper.TrackingSettings();
-    const clickTracking = new helper.ClickTracking(true, true);
-
-    trackingSettings.setClickTracking(clickTracking);
-    //remember super()
-    this.addTrackingSettings(trackingSettings);
+    sendgrid.setApiKey(keys.sendGridKey);
+    this.msg = {
+      to: recipients.map(({ email }) => email),
+      from: "testingdump22@gmail.com",
+      subject: subject,
+      html: content,
+      trackingSettings: { enable_text: true, enabled: true },
+    };
   }
 
-  addRecipients() {
-    const personalize = new helper.Personalization();
-    //iteriate recipients and use personalize obj above
-    this.recipients.forEach((recipient) => {
-      personalize.addTo(recipient);
-    });
-    this.addPersonalization(personalize);
+  async send() {
+    const response = await sendgrid.send(this.msg);
+    return response;
   }
 }
-
+// const survey = { title: 'my title', subject: 'Give us feedback!', recipients:'testingdump22@gmail.com', body: 'We would love to hear if you love our services!'}
+// axios.post('/api/surveys',survey);
 module.exports = Mailer;
